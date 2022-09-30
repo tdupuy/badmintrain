@@ -1,5 +1,7 @@
 <?php 
-var_dump($_POST);
+require_once('classes/tournament.class.php');
+$tournament = new Tournament(10,2);
+var_dump($tournament->get_matches($tournament->players));
 ?>
 <!doctype html>
 <html lang="en">
