@@ -1,7 +1,13 @@
 <?php 
 require_once('classes/tournament.class.php');
 $tournament = new Tournament(10,2);
-var_dump($tournament->get_matches($tournament->players));
+$teams = $tournament->get_teams(10);
+$matches = $tournament->get_matches(2,$teams);
+echo "<pre>";
+echo "Matches<br/>";
+var_dump($tournament->generate(20,4));
+echo "</pre>";
+
 ?>
 <!doctype html>
 <html lang="en">

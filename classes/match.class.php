@@ -8,24 +8,38 @@ class Match
     public function __construct(){
     }
 
-    public function generate_all_matches($players){
-        $n = 4;
+    public function get_matches($nbterrains,$teams){
+        for($i = 0; $i < $nbterrains; $i++){
+            for($j =0 ; $j < 2; $j++){
+                if(isset($matches)){
+                    foreach($matches as $match){
+                        $my_team = array_shift(array_values($teams));
+                        $matches['team_'.$j] = $my_team;
+                        $teams = $this->delete_players_others_matches($teams,$my_team);
+                    }
+                }else{
+                    $my_team = array_shift(array_values($teams));
+                    $matches['team_'.$j] = $my_team;
+                    $teams = $this->delete_players_others_matches($teams,$my_team);
+                }
+            }
+            $matches['terrain_'.$i][0] = $matches['team_0'];
+            $matches['terrain_'.$i][1] = $matches['team_1'];
+            unset($matches['team_0']);
+            unset($matches['team_1']);
+        }
+        return $matches;
+    }
 
-        for($i = 1; $i<=$n; $i++){
-            for($x = 1; $x<=$n; $x++){
-                if($i != $x && !isset($array[$x][$i])){
-                    $array[$i][$x] = '';
-                }
+    private function delete_players_others_matches($teams,$myteam){
+        $players = explode('-',$myteam);
+        foreach($teams as $key => $team){
+            $players_in_teams = explode('-',$team);
+            if($players[0] == $players_in_teams[0] || $players[1] == $players_in_teams[0] || $players[0] == $players_in_teams[1] || $players[1] == $players_in_teams[1]){
+                unset($teams[$key]);
             }
         }
-        for($i = 1; $i<=$n; $i++){
-            for($x = 1; $x<=$n; $x++){
-                if(isset($array[$i][$x])){
-                    $this->all_matches[] = $i.'-'.$x;
-                }
-            }
-        }
-        return $this->all_matches;
+        return $teams;
     }
       
 }
