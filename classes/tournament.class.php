@@ -46,6 +46,9 @@ class Tournament
                 unset($teams[$teams_key]);
             }
             $tournament['tour_'.$i] = $matches;
+            echo "Tour ".$i."<br/><br/>";
+            var_dump(sizeof($teams));
+            var_dump($nbterrains * 4);
         }
         return $tournament;
     }

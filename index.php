@@ -1,12 +1,10 @@
 <?php 
 require_once('classes/tournament.class.php');
-$tournament = new Tournament(10,2);
-$teams = $tournament->get_teams(10);
-$matches = $tournament->get_matches(2,$teams);
-echo "<pre>";
-echo "Matches<br/>";
-var_dump($tournament->generate(20,4));
-echo "</pre>";
+
+if(isset($_POST) && !empty($_POST)){
+    $tournament = new Tournament($_POST['nb_joueurs'],$_POST['nb_terrains']);
+    $tournament = $tournament->generate($_POST['nb_joueurs'],$_POST['nb_terrains']);
+}
 
 ?>
 <!doctype html>
@@ -15,6 +13,7 @@ echo "</pre>";
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="css/styles.css">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -45,7 +44,7 @@ echo "</pre>";
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
-            <option value="4">4</option>
+            <option value="4" selected>4</option>
             <option value="5">5</option>
             <option value="6">6</option>
             <option value="7">7</option>
@@ -58,7 +57,27 @@ echo "</pre>";
         </div>
     </div>
     </form>
-
+    <?php if($tournament) : ?>
+        <?php foreach($tournament as $key => $tour) : ?>
+            <h2 class="h2 text-uppercase text-center"> <?php echo str_replace('_',' ',$key); ?> </h2>
+            <div class="row">
+                <div class="container-fluid text-center py-5">
+                    <?php foreach($tour as $key2 => $terrain) : ?>
+                        <div class="card mx-3" style="width: 18rem;display:inline-block">
+                            <div class="card-header text-uppercase">
+                                <b><?php echo str_replace('_',' ',$key2); ?></b>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <?php foreach($terrain as $key=>$match) : ?>
+                                    <li class="list-group-item"><?php echo 'Joueur ' . str_replace('-',' & joueur ',$match); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
     
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

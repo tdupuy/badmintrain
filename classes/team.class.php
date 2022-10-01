@@ -25,4 +25,15 @@ class Team
         }
         return $this->all_matches;
     }
+
+    public function get_first_team_with_player($player,$teams){
+        $player = explode('_',$player)[1];
+        foreach($teams as $team){
+            $players = explode('-',$team); 
+            if($player == $players[0] || $player == $players[1]){
+                return $team;
+            }
+        }
+        return false;
+    }
 }
