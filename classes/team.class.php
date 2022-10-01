@@ -6,6 +6,13 @@ class Team
     }
       
     
+    /**
+     * Génére les pairs uniques pour tous les joueurs indiqués
+     * 
+     * @param mixed $players
+     * 
+     * @return Array les paires uniques pour les joueurs (sizeof($players))
+     */
     public function generate_teams($players){
         $n = sizeof($players);
 
@@ -26,6 +33,15 @@ class Team
         return $this->all_matches;
     }
 
+
+    /**
+     * Retourne la première équipe du tableau pour le joueur indiqué
+     * 
+     * @param mixed $player
+     * @param mixed $teams
+     * 
+     * @return String équipe
+     */
     public function get_first_team_with_player($player,$teams){
         $player = explode('_',$player)[1];
         foreach($teams as $team){

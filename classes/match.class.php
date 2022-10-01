@@ -1,18 +1,24 @@
 <?php
 class Match
 {
-    public $all_matches = [];
-    private $players = [];
 
-    // Constructor
     public function __construct(){
     }
 
+    /**
+     * Génère les matches en fonction du nombre de terrains et les équipes
+     * 
+     * @param int $nbterrains
+     * @param Array $teams
+     * 
+     * @return Array retourne un Array sous forme : $matches['terrain']['team_0'] = '1-2'
+     *                                                                 ['team_1] = '3-4'
+     */
     public function get_matches($nbterrains,$teams){
         $my_team = new Team;
         for($i = 0; $i < $nbterrains; $i++){
             for($j =0 ; $j < 2; $j++){
-                if(!empty($teams)){
+                if(!empty($teams) && sizeof($teams) >= 4){
                     if(isset($matches)){
                         $team_to_play = $my_team->get_first_team_with_player($this->get_player_max_matches_to_play($teams),$teams);
                         if(!$team_to_play){
@@ -40,6 +46,15 @@ class Match
         return $matches;
     }
 
+    
+    /**
+     * Supprime les autres matchs disponible pour les joueurs sélectionnés
+     * 
+     * @param mixed $teams toutes les équipes disponibles
+     * @param mixed $myteam les joueurs sélectionnés
+     * 
+     * @return Array les équipes sans celles qui sont composés des joueurs sélectionnés
+     */
     private function delete_players_others_matches($teams,$myteam){
         $players = explode('-',$myteam);
         foreach($teams as $key => $team){
@@ -51,11 +66,26 @@ class Match
         return $teams;
     }
 
+    /**
+     * Retourne un des joueurs pour lequel il reste le plus de match à jouer
+     * 
+     * @param mixed $teams toutes les équipes
+     * 
+     * @return int la clé du joueur dont il reste le plus de match à faire
+     */
     private function get_player_max_matches_to_play($teams){
         $matches_by_players = $this->get_matches_by_player($teams);
         return array_search(max(array_values($matches_by_players)),$matches_by_players);
     }
 
+
+    /**
+     * Récupère le nombre de matchs par joueur
+     * 
+     * @param mixed $teams toutes les équipes
+     * 
+     * @return Array le nombre de match par joueur
+     */
     private function get_matches_by_player($teams){
         foreach($teams as $key => $team){
             $player = explode('-',$team);
@@ -63,6 +93,10 @@ class Match
             $matches_by_players['joueur_'.$player[1]] = $matches_by_players['joueur_'.$player[1]]+1 ?? 1;
         }
         return $matches_by_players;
+    }
+
+    public function nomatches_players($matches){
+        
     }
       
 }
