@@ -20,7 +20,7 @@ if(isset($_POST) && !empty($_POST)){
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Hello, world!</title>
+    <title>Génération de matchs</title>
   </head>
   <body>
     <?php if(!isset($_POST) || empty($_POST)) : ?>
