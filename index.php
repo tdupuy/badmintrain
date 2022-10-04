@@ -23,40 +23,46 @@ if(isset($_POST) && !empty($_POST)){
     <title>Hello, world!</title>
   </head>
   <body>
-  <form action="#" method="post">
-    <div class="form-group row">
-        <label for="nb_joueurs" class="col-4 col-form-label">Nombre de joueurs</label> 
-        <div class="col-8">
-        <div class="input-group">
-            <div class="input-group-prepend">
-            <div class="input-group-text">
-                <i class="fa fa-users"></i>
+    <?php if(!isset($_POST) || empty($_POST)) : ?>
+    <form action="#" method="post">
+        <section class="vh-100 gradient-custom">
+            <div class="container py-5 h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                        <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                            <div class="card-body p-5 text-center">
+
+                                <div class="mb-md-5 mt-md-4 pb-5">
+
+                                <h2 class="fw-bold mb-2 text-uppercase">Matchs</h2>
+                                <p class="text-white-50 mb-5">Générer les matchs</p>
+
+                                <div class="form-outline form-white mb-4">
+                                    <label class="form-label" for="nb_joueurs">Nombre de joueurs</label>
+                                    <input id="nb_joueurs" name="nb_joueurs" type="number" class="form-control" required="required">
+                                </div>
+
+                                <div class="form-outline form-white mb-4">
+                                    <label class="form-label" for="nb_terrains">Nombre de terrains</label>
+                                    <select id="nb_terrains" name="nb_terrains" class="custom-select form-control form-control-lg" required="required">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4" selected>4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-outline-light btn-lg px-5" type="submit">Générer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            </div> 
-            <input id="nb_joueurs" name="nb_joueurs" type="text" class="form-control" required="required">
-        </div>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="nb_terrains" class="col-4 col-form-label">Nombre de terrains</label> 
-        <div class="col-8">
-        <select id="nb_terrains" name="nb_terrains" class="custom-select" required="required">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4" selected>4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-        </select>
-        </div>
-    </div> 
-    <div class="form-group row">
-        <div class="offset-4 col-8">
-        <button name="submit" type="submit" class="btn btn-primary">Submit</button>
-        </div>
-    </div>
+        </section>
     </form>
+    <?php endif; ?>
     <?php if($tournament) : ?>
         <?php foreach($tournament as $key => $tour) : ?>
             <h2 class="h2 text-uppercase text-center"> <?php echo str_replace('_',' ',$key); ?> </h2>
