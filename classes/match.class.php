@@ -22,6 +22,9 @@ class Match
             for($j =0 ; $j < 2; $j++){
                 if(!empty($teams)){
                     $team_to_play = $my_team->get_team_to_play($teams);
+                    if(!$team_to_play){
+                        die('Exception');
+                    }
                     $matches['team_'.$j] = $team_to_play;
                     $teams = $this->delete_players_others_matches($teams,$team_to_play);
                     $my_team->decrease_max_to_play($team_to_play);
@@ -35,11 +38,11 @@ class Match
 
         foreach($matches as $key => $match){
             if(is_null($match[0]) || is_null($match[1])){
-                unset($matches[$key]);
+                $matches[$key][0] = '';
+                $matches[$key][1] = '';
             }
         }
-
-        $matches['substitutes'] = $this->get_substitutes_players($teams);
+        //$matches['substitutes'] = $this->get_substitutes_players($teams);
         return $matches;
     }
 
@@ -54,7 +57,6 @@ class Match
      */
     private function delete_players_others_matches($teams,$myteam){
         $players = explode('-',$myteam);
-
         foreach($teams as $key => $team){
             $players_in_teams = explode('-',$team);
             if($players[0] == $players_in_teams[0] || $players[1] == $players_in_teams[0] || $players[0] == $players_in_teams[1] || $players[1] == $players_in_teams[1]){
@@ -99,6 +101,11 @@ class Match
 
     public static function is_match_played($teams,$match){
         foreach($teams as $team){
+            if($team == $match){
+                return false;
+            }
+        }
+        return true;
     }
       
 }

@@ -70,11 +70,18 @@ class Team
     public function get_team_to_play($teams){
         $max = array_search(max($this->matches_by_players),$this->matches_by_players);
         $joueurs = array_keys($this->matches_by_players,$this->matches_by_players[$max]);
-        foreach($joueurs as $joueur){
-            $team_to_play = $this->get_first_team_with_player($joueur,$teams);
-            if($team_to_play){
-                return $team_to_play;
+        foreach($joueurs as $joueur1){
+            foreach($joueurs as $joueur2){
+                if($joueur1 != $joueur2){
+                    $team_to_play = explode('joueur_',$joueur1)[1].'-'.explode('joueur_',$joueur2)[1];
+                    if(Match::is_match_played($teams,$team_to_play) == false){
+                        return $team_to_play;
+                    }
+                }
             }
+        }
+        if($teams && !empty($teams)){
+            return array_shift(array_values($teams));
         }
         return false;
     }

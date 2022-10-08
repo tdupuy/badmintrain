@@ -67,7 +67,7 @@ class Tournament
      */
     public function generate($nbplayers,$nbterrains){
         $teams = $this->get_teams($nbplayers);
-        while(sizeof($teams) > ($nbterrains * 4)){
+        while(sizeof($teams) > 0){
             $i++;
             $matches = $this->get_matches($nbterrains,$teams);
             foreach($matches as $match){
@@ -76,7 +76,9 @@ class Tournament
                 $teams_key = array_search($match[1],$teams);
                 unset($teams[$teams_key]);
             }
+            $substitutes = Match::get_substitutes_players($matches,$this->generate_players_arr($nbplayers));
             $tournament['tour_'.$i] = $matches;
+            $tournament['tour_'.$i]['substitutes'] = $substitutes;
         }
         return $tournament;
     }
