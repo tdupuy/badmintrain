@@ -41,7 +41,6 @@ class Team
         return $this->all_matches;
     }
 
-
     /**
      * Retourne la première équipe du tableau pour le joueur indiqué
      * 
@@ -50,26 +49,7 @@ class Team
      * 
      * @return String équipe
      */
-    public function get_first_team_with_players($player,$teams){
-        $player = explode('_',$player)[1];
-        foreach($teams as $team){
-            $players = explode('-',$team); 
-            if($player == $players[0] || $player == $players[1]){
-                return $team;
-            }
-        }
-        return false;
-    }
-
-     /**
-     * Retourne la première équipe du tableau pour le joueur indiqué
-     * 
-     * @param mixed $player
-     * @param mixed $teams
-     * 
-     * @return String équipe
-     */
-    public function get_first_team_with_player($player,$teams){
+    private function get_first_team_with_player($player,$teams){
         $player = explode('joueur_',$player)[1];
         foreach($teams as $team){
             $players = explode('-',$team); 
