@@ -56,7 +56,6 @@ class Tournament
         $matches = $match->get_matches($nbterrains,$teams);
         return $matches;
     }
-
     
     /**
      * Retourne le tableau du "tournoi"
