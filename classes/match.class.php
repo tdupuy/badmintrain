@@ -81,22 +81,24 @@ class Match
         return $matches_by_players;
     }
 
-    private function get_substitutes_players($teams){
-        $substitutes = [];
-        foreach($teams as $key => $team){
-            $player = explode('-',$team);
-            if(array_search($player[0],$substitutes) === FALSE){
-                $substitutes[] = $player[0];
+    public static function get_substitutes_players($matches,$players){
+        foreach($matches as $match){
+            foreach($match as $team){
+                $players_ig = explode('-',$team);
+                $players_ig_arr[] = intval($players_ig[0]);
+                $players_ig_arr[] = intval($players_ig[1]);
             }
-            if(array_search($player[1],$substitutes) === FALSE){
-                $substitutes[] = $player[1];
+        }
+        foreach($players as $player){
+            if(array_search($player,$players_ig_arr) === false){
+                $substitutes[] = $player;
             }
         }
         return $substitutes;
     }
 
-    public function nomatches_players($matches){
-        
+    public static function is_match_played($teams,$match){
+        foreach($teams as $team){
     }
       
 }
