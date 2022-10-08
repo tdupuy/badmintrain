@@ -14,6 +14,13 @@ class Tournament
         $this->nbterrains = $nbterrains;
     }
 
+    /**
+     * Créer un array pour le nombre de joueur indiqué
+     * 
+     * @param mixed $nbplayers
+     * 
+     * @return Array pour le nombre de joueur indiqué
+     */
     private function generate_players_arr($nbplayers){
         for($i = 1; $i <= $nbplayers; $i++){
             $players[$i] = $i;
@@ -21,6 +28,14 @@ class Tournament
         return $players;
     }
 
+
+    /**
+     * Créer les matches pour le nombre de joueur indiqué
+     * 
+     * @param mixed $nbplayers
+     * 
+     * @return Array les équipes (nombre de pair unique pour le nombre de joueur indiqué)
+     */
     public function get_teams($nbplayers){
         $team = new Team();
         $players = $this->generate_players_arr($nbplayers);
@@ -28,15 +43,31 @@ class Tournament
         return $teams;
     }
 
+    /**
+     * Créer les matches
+     * 
+     * @param mixed $nbterrains
+     * @param mixed $teams
+     * 
+     * @return Array les matchs
+     */
     public function get_matches($nbterrains,$teams){
         $match = new Match();
         $matches = $match->get_matches($nbterrains,$teams);
         return $matches;
     }
-
+    
+    /**
+     * Retourne le tableau du "tournoi"
+     * 
+     * @param mixed $nbplayers
+     * @param mixed $nbterrains
+     * 
+     * @return Array tableau sous forme : $tournament['tour_i']['terrain_i']['match_i']
+     */
     public function generate($nbplayers,$nbterrains){
         $teams = $this->get_teams($nbplayers);
-        while(sizeof($teams) > ($nbterrains * 4)){
+        while(sizeof($teams) > 0){
             $i++;
             $matches = $this->get_matches($nbterrains,$teams);
             foreach($matches as $match){
@@ -45,7 +76,9 @@ class Tournament
                 $teams_key = array_search($match[1],$teams);
                 unset($teams[$teams_key]);
             }
+            $substitutes = Match::get_substitutes_players($matches,$this->generate_players_arr($nbplayers));
             $tournament['tour_'.$i] = $matches;
+            $tournament['tour_'.$i]['substitutes'] = $substitutes;
         }
         return $tournament;
     }
