@@ -6,6 +6,16 @@ if(isset($_POST) && !empty($_POST)){
     $tournament = $tournament->generate($_POST['nb_joueurs'],$_POST['nb_terrains']);
 }
 
+if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
+$url = "https://";   
+else  
+$url = "http://";   
+// Append the host(domain name, ip) to the URL.   
+$url.= $_SERVER['HTTP_HOST'];   
+
+// Append the requested resource location to the URL   
+$url.= $_SERVER['REQUEST_URI'];    
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -29,7 +39,7 @@ if(isset($_POST) && !empty($_POST)){
             <div class="container py-5 h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                        <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                        <div class="card bg-dark text-white post-form" style="border-radius: 1rem;">
                             <div class="card-body p-5 text-center">
 
                                 <div class="mb-md-5 mt-md-4 pb-5">
@@ -64,6 +74,7 @@ if(isset($_POST) && !empty($_POST)){
     </form>
     <?php endif; ?>
     <?php if($tournament) : ?>
+        <a href="<?php echo $url; ?>" class="btn primary-btn back-home"><i class="fa fa-home" aria-hidden="true"></i></a>
         <?php foreach($tournament as $key => $tour) : ?>
             <h2 class="h2 text-uppercase text-center my-2"> <?php echo str_replace('_',' ',$key); ?> </h2>
             <div class="row">
