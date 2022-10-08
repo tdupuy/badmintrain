@@ -63,10 +63,16 @@
 
 .back-home{
     position: fixed;
-    right: 0;
-    font-size: 1.2rem!important;
+    right: .66rem;
+    font-size: 1rem!important;
     background-color: #3a8eba!important;
     border-radius: 5px 0 0 5px!important;
     color: white!important;
     bottom: 1rem;
+}
+
+.substitute{
+    font-weight: bold;
+    color: #3a8eba;
+    font-size: 1.2rem;
 }

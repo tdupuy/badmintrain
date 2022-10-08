@@ -128,7 +128,14 @@ $url.= $_SERVER['REQUEST_URI'];
                                     <?php endforeach; ?>
                                 </ul>-->
                             </div>
+                        <?php else : ?>
+                            <p class="h6 "><b>Coin buvette :</b> 
+                                <?php foreach($terrain as $substitute) : ?>
+                                    <span class="substitute"><?php echo $substitute; ?></span>
+                                <?php endforeach ?>
+                            </p>
                         <?php endif; ?>
+
                     <?php endforeach; ?>
                 </div>
             </div>
