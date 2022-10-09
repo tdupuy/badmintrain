@@ -14,14 +14,13 @@ class Match
      * @return Array retourne un Array sous forme : $matches['terrain']['team_0'] = '1-2'
      *                                                                 ['team_1] = '3-4'
      */
-    public function get_matches($nbterrains,$teams){
+    public function get_matches($nbterrains,$teams,$substitutes){
         $my_team = new Team;
         $my_team->set_matches_by_players($this->get_matches_by_player($teams));
-
         for($i = 1; $i <= $nbterrains; $i++){
             for($j =0 ; $j < 2; $j++){
                 if(!empty($teams)){
-                    $team_to_play = $my_team->get_team_to_play($teams);
+                    $team_to_play = $my_team->get_team_to_play($teams,$substitutes);
                     if(!$team_to_play){
                         die('Exception');
                     }
@@ -42,7 +41,6 @@ class Match
                 $matches[$key][1] = '';
             }
         }
-        //$matches['substitutes'] = $this->get_substitutes_players($teams);
         return $matches;
     }
 
@@ -100,12 +98,11 @@ class Match
     }
 
     public static function is_match_played($teams,$match){
-        foreach($teams as $team){
-            if($team == $match){
-                return false;
-            }
+        if(array_search($match,$teams) !== false){
+            return false;
+        }else{
+            return true;
         }
-        return true;
     }
       
 }

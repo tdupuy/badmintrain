@@ -51,9 +51,9 @@ class Tournament
      * 
      * @return Array les matchs
      */
-    public function get_matches($nbterrains,$teams){
+    public function get_matches($nbterrains,$teams,$substitutes){
         $match = new Match();
-        $matches = $match->get_matches($nbterrains,$teams);
+        $matches = $match->get_matches($nbterrains,$teams,$substitutes);
         return $matches;
     }
     
@@ -67,9 +67,10 @@ class Tournament
      */
     public function generate($nbplayers,$nbterrains){
         $teams = $this->get_teams($nbplayers);
-        while(sizeof($teams) > 0){
+        $substitutes = [];
+        while(sizeof($teams) > 1){
             $i++;
-            $matches = $this->get_matches($nbterrains,$teams);
+            $matches = $this->get_matches($nbterrains,$teams,$substitutes);
             foreach($matches as $match){
                 $teams_key = array_search($match[0],$teams);
                 unset($teams[$teams_key]);
