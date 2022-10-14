@@ -76,3 +76,23 @@
     color: #3a8eba;
     font-size: 1.2rem;
 }
+
+.controls .control{
+    position: absolute;
+    top: 0;
+    font-weight: bold;
+    height: 20rem;
+    font-size: 1.5rem;
+    width: 2rem;
+}
+.controls .control i{
+    padding-top: 9rem;
+}
+
+.controls .control-prev{
+    left: -2.5rem;
+}
+
+.controls .control-next{
+    right: -2.5rem;
+}
