@@ -62,9 +62,19 @@ class Tournament
         return $teams;
     }
 
-    public function generate_turn($index_turn){
-        if(empty($this->teams)){
+    public function generate_turn($index_turn, $old_tournament = false, $teams = false){
+        if($old_tournament){
+            // On retire un car on ajouté les substitutes dans le tableau
+            $this->nbterrains = sizeof($old_tournament) - 1;
+            $this->nbplayers = ($this->nbterrains * 4) + sizeof($old_tournament['substitutes']);
+        }
+        if($teams && !empty($teams) && sizeof($teams) > 1){
+            $this->teams = $teams;
+        }else if(empty($this->teams) && $teams === false){
             $this->teams = $this->generate_teams($this->nbplayers);
+        }else{
+            $tournament['end'] = true;
+            return $tournament;
         }
         $matches = $this->get_matches($this->nbterrains,$this->teams,$this->substitutes);
         foreach($matches as $match){
@@ -76,7 +86,7 @@ class Tournament
         $this->substitutes = Match::get_substitutes_players($matches,$this->generate_players_arr($this->nbplayers));
         $tournament['tour_'.$index_turn] = $matches;
         $tournament['tour_'.$index_turn]['substitutes'] = $this->substitutes;
-        var_dump(sizeof($this->teams));
+        $tournament['tour_'.$index_turn]['teams'] = $this->teams;
         return $tournament;
     }
 
@@ -92,33 +102,5 @@ class Tournament
         $match = new Match();
         $matches = $match->get_matches($nbterrains,$teams,$substitutes);
         return $matches;
-    }
-    
-    /**
-     * Retourne le tableau du "tournoi"
-     * 
-     * @param mixed $nbplayers
-     * @param mixed $nbterrains
-     * 
-     * @return Array tableau sous forme : $tournament['tour_i']['terrain_i']['match_i']
-     */
-    public function generate_tournament($nbplayers,$nbterrains){
-        $teams = $this->generate_teams($nbplayers);
-        $substitutes = [];
-        while(sizeof($teams) > 1){
-            $i++;
-            $matches = $this->get_matches($nbterrains,$teams,$substitutes);
-            foreach($matches as $match){
-                $teams_key = array_search($match[0],$teams);
-                unset($teams[$teams_key]);
-                $teams_key = array_search($match[1],$teams);
-                unset($teams[$teams_key]);
-            }
-            $substitutes = Match::get_substitutes_players($matches,$this->generate_players_arr($nbplayers));
-            $tournament['tour_'.$i] = $matches;
-            $tournament['tour_'.$i]['substitutes'] = $substitutes;
-        }
-        $this->set_tournament($tournament);
-        return $tournament;
     }
 }

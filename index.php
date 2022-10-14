@@ -1,21 +1,26 @@
 <?php 
 require_once('classes/tournament.class.php');
 
-if(isset($_POST) && !empty($_POST)){
-    $tournament2 = new Tournament($_POST['nb_joueurs'],$_POST['nb_terrains']);
-    $tournament = $tournament2->generate_turn(1);
-    $tournament = $tournament2->generate_turn(2);
+$tournament = false;
+
+if(isset($_POST) && !empty($_POST) || isset($_GET) && !empty($_GET)){
+    session_start();
+    $tournament = new Tournament($_POST['nb_joueurs'],$_POST['nb_terrains']);
+    if(!isset($_GET['turn'])){
+        $turn = 1;
+        $tournament = $tournament->generate_turn($turn);
+    }else{
+        $turn = intval($_GET['turn']);
+        $turn++;
+        $teams = $_SESSION['teams'];
+        $old_tournament = unserialize(urldecode($_GET['tournament']));
+        $tournament = $tournament->generate_turn($turn,$old_tournament,$teams);
+    }
+    $_SESSION['teams'] = $tournament['tour_'.$turn]['teams'];
+    unset($tournament['tour_'.$turn]['teams']);
 }
-
-if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
-$url = "https://";   
-else  
-$url = "http://";   
 // Append the host(domain name, ip) to the URL.   
-$url.= $_SERVER['HTTP_HOST'];   
-
-// Append the requested resource location to the URL   
-$url.= $_SERVER['REQUEST_URI'];    
+$url = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] . explode('?', $_SERVER['REQUEST_URI'], 2)[0];
 
 ?>
 <!doctype html>
@@ -34,7 +39,7 @@ $url.= $_SERVER['REQUEST_URI'];
     <title>Génération de matchs</title>
   </head>
   <body>
-    <?php if(!isset($_POST) || empty($_POST)) : ?>
+    <?php if(!$tournament) : ?>
     <form action="#" method="post">
         <section class="vh-100 gradient-custom">
             <div class="container py-5 h-100">
@@ -75,72 +80,90 @@ $url.= $_SERVER['REQUEST_URI'];
     </form>
     <?php endif; ?>
     <?php if($tournament) : ?>
-        <a href="<?php echo $url; ?>" class="btn primary-btn back-home"><i class="fa fa-home" aria-hidden="true"></i></a>
-        <?php foreach($tournament as $key => $tour) : ?>
-            <h2 class="h2 text-uppercase text-center my-2"> <?php echo str_replace('_',' ',$key); ?> </h2>
-            <div class="row">
-                <div class="container-fluid text-center py-5">
-                    <?php foreach($tour as $key2 => $terrain) : ?>
-                        <?php if($key2 != "substitutes") : ?>
-                            <div class="card mx-3 mb-5" style="width: 18rem;display:inline-block;height:20rem;">
-                                <div class="card-header text-uppercase">
-                                    <b><?php echo str_replace('_',' ',$key2); ?></b>
-                                </div>
-                                <div class="terrain-content">
-                                    <div>
-                                        <div class="left corridor"></div>
-                                        <?php foreach($terrain as $key=>$match) : ?>
-                                            <?php 
-                                                if($match == ""):
-                                                    if($key == 0) :
-                                            ?>
-                                            <div class="match-impossible pt-5 px-3">
-                                                <p class="h5 text-white text-center"> Pas de match sur ce terrain (libre) </p>
-                                                <p class="h6 text-white text-center"> Sûrement la faut du développeur mais il se peut aussi que ce ne soit pas possible </p>
-                                            </div>
-                                            <?php
-                                                    endif; 
-                                                else : 
-                                            ?>
-                                            <?php
-                                                $players = explode('-',$match); 
-                                            ?>
-                                            <?php if($key == 0) : ?>
-                                                <div class="ligne-fond top d-block"></div> 
-                                            <?php endif; ?>
-                                            <div class="player left d-inline-block">
-                                                <span class="player_nb"><?php echo $players[0]; ?></span>
-                                            </div>
-                                            <div class="player right d-inline-block">
-                                                <span class="player_nb"><?php echo $players[1]; ?></span>
-                                            </div>
-                                            <div class="d-block terrain-separator"></div>
-                                            <?php if($key == 1) : ?>
-                                                <div class="ligne-fond bottom d-block"></div>
-                                            <?php endif; ?>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
-                                        <div class="right corridor"></div>
-                                    </div>
-                                </div>
-                                <!--<ul class="list-group list-group-flush">
-                                    <?php foreach($terrain as $key=>$match) : ?>
-                                        <li class="list-group-item"><?php echo 'Joueur ' . str_replace('-',' & joueur ',$match); ?></li>
-                                    <?php endforeach; ?>
-                                </ul>-->
-                            </div>
-                        <?php else : ?>
-                            <p class="h6 "><b>Coin buvette :</b> 
-                                <?php foreach($terrain as $substitute) : ?>
-                                    <span class="substitute"><?php echo $substitute; ?></span>
-                                <?php endforeach ?>
-                            </p>
-                        <?php endif; ?>
-
-                    <?php endforeach; ?>
-                </div>
+        <?php if($tournament['end']) : ?>
+            <h2 class="h2 text-uppercase text-center my-2"> FIN DU TOURNOI </h2>
+            <div class="text-center">
+                <a href="
+                    <?php echo $url ?>" 
+                    class="btn btn-primary"> 
+                    Retour
+                </a>
             </div>
-        <?php endforeach; ?>
+        <?php else : ?>
+            <a href="<?php echo $url; ?>" class="btn primary-btn back-home"><i class="fa fa-home" aria-hidden="true"></i></a>
+            <?php foreach($tournament as $key => $tour) : ?>
+                <h2 class="h2 text-uppercase text-center my-2"> <?php echo str_replace('_',' ',$key); ?> </h2>
+                <div class="row">
+                    <div class="container-fluid text-center py-5">
+                        <?php foreach($tour as $key2 => $terrain) : ?>
+                            <?php if(strpos($key2,'terrain_') !== false) : ?>
+                                <div class="card mx-3 mb-5" style="width: 18rem;display:inline-block;height:20rem;">
+                                    <div class="card-header text-uppercase">
+                                        <b><?php echo str_replace('_',' ',$key2); ?></b>
+                                    </div>
+                                    <div class="terrain-content">
+                                        <div>
+                                            <div class="left corridor"></div>
+                                            <?php foreach($terrain as $key=>$match) : ?>
+                                                <?php 
+                                                    if($match == ""):
+                                                        if($key == 0) :
+                                                ?>
+                                                <div class="match-impossible pt-5 px-3">
+                                                    <p class="h5 text-white text-center"> Pas de match sur ce terrain (libre) </p>
+                                                    <p class="h6 text-white text-center"> Sûrement la faut du développeur mais il se peut aussi que ce ne soit pas possible </p>
+                                                </div>
+                                                <?php
+                                                        endif; 
+                                                    else : 
+                                                ?>
+                                                <?php
+                                                    $players = explode('-',$match); 
+                                                ?>
+                                                <?php if($key == 0) : ?>
+                                                    <div class="ligne-fond top d-block"></div> 
+                                                <?php endif; ?>
+                                                <div class="player left d-inline-block">
+                                                    <span class="player_nb"><?php echo $players[0]; ?></span>
+                                                </div>
+                                                <div class="player right d-inline-block">
+                                                    <span class="player_nb"><?php echo $players[1]; ?></span>
+                                                </div>
+                                                <div class="d-block terrain-separator"></div>
+                                                <?php if($key == 1) : ?>
+                                                    <div class="ligne-fond bottom d-block"></div>
+                                                <?php endif; ?>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                            <div class="right corridor"></div>
+                                        </div>
+                                    </div>
+                                    <!--<ul class="list-group list-group-flush">
+                                        <?php foreach($terrain as $key=>$match) : ?>
+                                            <li class="list-group-item"><?php echo 'Joueur ' . str_replace('-',' & joueur ',$match); ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>-->
+                                </div>
+                            <?php elseif($key2 == "substitutes") : ?>
+                                <p class="h6 "><b>Coin buvette :</b> 
+                                    <?php foreach($terrain as $substitute) : ?>
+                                        <span class="substitute"><?php echo $substitute; ?></span>
+                                    <?php endforeach ?>
+                                </p>
+                            <?php endif; ?>
+
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+            <div class="text-center">
+                <a href="
+                    <?php echo $url.'?turn='.$turn.'&tournament='.urlencode(serialize($tournament['tour_'.$turn])); ?>" 
+                    class="btn btn-primary"> 
+                    Tour suivant 
+                </a>
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
     
     <!-- Optional JavaScript -->
