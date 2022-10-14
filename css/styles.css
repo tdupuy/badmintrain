@@ -85,6 +85,11 @@
     font-size: 1.5rem;
     width: 2rem;
 }
+
+.controls .control:hover{
+    cursor: pointer;
+}
+
 .controls .control i{
     padding-top: 9rem;
 }
