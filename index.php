@@ -151,7 +151,7 @@ $url = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] . explode('?', $
                     </div>
                 </div>
             <?php endforeach; ?>
-            <div class="text-center">
+            <div class="text-center d-block mb-2">
                 <a href="
                     <?php echo $url.'?turn='.$turn.'&tournament='.urlencode(serialize($tournament['tour_'.$turn])); ?>" 
                     class="btn btn-primary"> 
