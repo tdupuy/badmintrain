@@ -138,11 +138,6 @@ $url = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] . explode('?', $
                                             <div class="right corridor"></div>
                                         </div>
                                     </div>
-                                    <!--<ul class="list-group list-group-flush">
-                                        <?php foreach($terrain as $key=>$match) : ?>
-                                            <li class="list-group-item"><?php echo 'Joueur ' . str_replace('-',' & joueur ',$match); ?></li>
-                                        <?php endforeach; ?>
-                                    </ul>-->
                                 </div>
                             <?php elseif($key2 == "substitutes") : ?>
                                 <p class="h6 "><b>Coin buvette :</b> 
