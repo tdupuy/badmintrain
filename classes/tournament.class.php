@@ -8,10 +8,20 @@ class Tournament
     private $nbplayers;
     private $nbterrains;
 
+    private $teams;
+
     // Constructor
     public function __construct($nbplayers,$nbterrains){
         $this->nbplayers = $nbplayers;
         $this->nbterrains = $nbterrains;
+    }
+
+    public function set_teams($teams){
+        $this->teams = $teams;
+    }
+
+    public function get_teams(){
+        return $this->teams;
     }
 
     /**
@@ -36,7 +46,7 @@ class Tournament
      * 
      * @return Array les équipes (nombre de pair unique pour le nombre de joueur indiqué)
      */
-    public function get_teams($nbplayers){
+    public function generate_teams($nbplayers){
         $team = new Team();
         $players = $this->generate_players_arr($nbplayers);
         $teams = $team->generate_teams($players);
@@ -65,8 +75,8 @@ class Tournament
      * 
      * @return Array tableau sous forme : $tournament['tour_i']['terrain_i']['match_i']
      */
-    public function generate($nbplayers,$nbterrains){
-        $teams = $this->get_teams($nbplayers);
+    public function generate_tournament($nbplayers,$nbterrains){
+        $teams = $this->generate_teams($nbplayers);
         $substitutes = [];
         while(sizeof($teams) > 1){
             $i++;
