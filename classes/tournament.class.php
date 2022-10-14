@@ -9,6 +9,7 @@ class Tournament
     private $nbterrains;
 
     private $teams;
+    private $substitutes;
 
     // Constructor
     public function __construct($nbplayers,$nbterrains){
@@ -22,6 +23,14 @@ class Tournament
 
     public function get_teams(){
         return $this->teams;
+    }
+
+    public function set_substitutes($substitutes){
+        $this->substitutes = $substitutes;
+    }
+
+    public function get_substitutes(){
+        return $this->substitutes;
     }
 
     /**
@@ -51,6 +60,24 @@ class Tournament
         $players = $this->generate_players_arr($nbplayers);
         $teams = $team->generate_teams($players);
         return $teams;
+    }
+
+    public function generate_turn($index_turn){
+        if(empty($this->teams)){
+            $this->teams = $this->generate_teams($this->nbplayers);
+        }
+        $matches = $this->get_matches($this->nbterrains,$this->teams,$this->substitutes);
+        foreach($matches as $match){
+            $teams_key = array_search($match[0],$this->teams);
+            unset($this->teams[$teams_key]);
+            $teams_key = array_search($match[1],$this->teams);
+            unset($this->teams[$teams_key]);
+        }
+        $this->substitutes = Match::get_substitutes_players($matches,$this->generate_players_arr($this->nbplayers));
+        $tournament['tour_'.$index_turn] = $matches;
+        $tournament['tour_'.$index_turn]['substitutes'] = $this->substitutes;
+        var_dump(sizeof($this->teams));
+        return $tournament;
     }
 
     /**
@@ -91,6 +118,7 @@ class Tournament
             $tournament['tour_'.$i] = $matches;
             $tournament['tour_'.$i]['substitutes'] = $substitutes;
         }
+        $this->set_tournament($tournament);
         return $tournament;
     }
 }

@@ -2,8 +2,9 @@
 require_once('classes/tournament.class.php');
 
 if(isset($_POST) && !empty($_POST)){
-    $tournament = new Tournament($_POST['nb_joueurs'],$_POST['nb_terrains']);
-    $tournament = $tournament->generate_tournament($_POST['nb_joueurs'],$_POST['nb_terrains']);
+    $tournament2 = new Tournament($_POST['nb_joueurs'],$_POST['nb_terrains']);
+    $tournament = $tournament2->generate_turn(1);
+    $tournament = $tournament2->generate_turn(2);
 }
 
 if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
