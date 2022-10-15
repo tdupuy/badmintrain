@@ -90,7 +90,11 @@ $url = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] . explode('?', $
                 </a>
             </div>
         <?php else : ?>
-            <a href="<?php echo $url; ?>" class="btn primary-btn back-home"><i class="fa fa-home" aria-hidden="true"></i></a>
+            <!-- Gestion du menu -->
+            <div class="action-menu">
+                <a href="<?php echo $url; ?>" class="btn primary-btn back-home"><i class="fa fa-home" aria-hidden="true"></i></a>
+                <a href="#" class="btn primary-btn add-player" data-toggle="modal" data-target="#delete-player-modal"><i class="fa fa-user-times" aria-hidden="true"></i></a>
+            </div>
             <?php foreach($tournament as $key => $tour) : ?>
                 <h2 class="h2 text-uppercase text-center my-2"> <?php echo str_replace('_',' ',$key); ?> </h2>
                 <div class="row">
@@ -164,6 +168,27 @@ $url = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] . explode('?', $
             </div>
         <?php endif; ?>
     <?php endif; ?>
+    <!-- Modal -->
+    <div class="modal fade" id="delete-player-modal" tabindex="-1" role="dialog" aria-labelledby="delete-player-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="delete-player-modal-label">Suppression d'un joueur</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <label class="form-label" for="del-player">Numéro du joueur</label>
+            <input id="del-player" name="del-player" type="number" class="form-control" required="required">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-primary">Valider</button>
+        </div>
+        </div>
+    </div>
+    </div>
     
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

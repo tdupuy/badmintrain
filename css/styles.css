@@ -61,14 +61,22 @@
     top: 3rem;
 }
 
-.back-home{
+.action-menu a{
     position: fixed;
     right: .66rem;
     font-size: 1rem!important;
     background-color: #3a8eba!important;
     border-radius: 5px 0 0 5px!important;
     color: white!important;
-    bottom: 1rem;
+}
+
+.action-menu a.back-home{
+    bottom:1rem;
+}
+
+.action-menu a.add-player{
+    bottom: 3rem;
+    width: 2.5rem;
 }
 
 .substitute{
