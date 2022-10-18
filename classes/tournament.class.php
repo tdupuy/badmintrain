@@ -62,7 +62,18 @@ class Tournament
         return $teams;
     }
 
-    public function generate_turn($index_turn, $old_tournament = false, $teams = false){
+    private function delete_player_others_matches($teams,$player){
+        foreach($teams as $key => $team){
+            $players_in_teams = explode('-',$team);
+            if($player == $players_in_teams[0] || $players == $players_in_teams[1]){
+                unset($teams[$key]);
+            }
+        }
+        return $teams;
+    }
+
+
+    public function generate_turn($index_turn, $old_tournament = false, $teams = false, $del_ids_players = []){
         if($old_tournament){
             // On retire un car on ajouté les substitutes dans le tableau
             $this->nbterrains = sizeof($old_tournament) - 1;
@@ -75,6 +86,11 @@ class Tournament
         }else{
             $tournament['end'] = true;
             return $tournament;
+        }
+        if(!empty($del_ids_players)){
+            foreach($del_ids_players as $del_id_player){
+                $this->teams = $this->delete_player_others_matches($this->teams,$del_id_player);
+            }
         }
         $matches = $this->get_matches($this->nbterrains,$this->teams,$this->substitutes);
         foreach($matches as $match){

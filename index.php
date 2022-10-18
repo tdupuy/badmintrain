@@ -10,11 +10,15 @@ if(isset($_POST) && !empty($_POST) || isset($_GET) && !empty($_GET)){
         $turn = 1;
         $tournament = $tournament->generate_turn($turn);
     }else{
+        $del_ids_players = [];
+        if(isset($_GET['del_players'])){
+            $del_ids_players = explode(',',$_GET['del_players']);
+        }
         $turn = intval($_GET['turn']);
         $turn++;
         $teams = $_SESSION['teams'];
         $old_tournament = unserialize(urldecode($_GET['tournament']));
-        $tournament = $tournament->generate_turn($turn,$old_tournament,$teams);
+        $tournament = $tournament->generate_turn($turn,$old_tournament,$teams,$del_ids_players);
     }
     $_SESSION['teams'] = $tournament['tour_'.$turn]['teams'];
     unset($tournament['tour_'.$turn]['teams']);
@@ -160,9 +164,11 @@ $url = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] . explode('?', $
                 </div>
             <?php endforeach; ?>
             <div class="text-center d-block mb-2">
-                <a href="
-                    <?php echo $url.'?turn='.$turn.'&tournament='.urlencode(serialize($tournament['tour_'.$turn])); ?>" 
-                    class="btn btn-primary"> 
+                <a 
+                    href="<?php echo $url.'?turn='.$turn.'&tournament='.urlencode(serialize($tournament['tour_'.$turn])); ?>" 
+                    class="btn btn-primary"
+                    id="next-turn"
+                > 
                     Tour suivant 
                 </a>
             </div>
@@ -179,12 +185,15 @@ $url = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] . explode('?', $
             </button>
         </div>
         <div class="modal-body">
-            <label class="form-label" for="del-player">Numéro du joueur</label>
-            <input id="del-player" name="del-player" type="number" class="form-control" required="required">
+            <div class="del-player-wrapper">
+                <label class="form-label" for="del-player1">Numéro du joueur</label>
+                <input id="del-player-id" name="del-player" type="text" class="form-control" required="required">
+                <small><i>Séparer par une virgule si vous voulez en supprimer plusieurs</i></small>
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-            <button type="button" class="btn btn-primary">Valider</button>
+            <button id="del-player-confirm" type="button" class="btn btn-primary" data-dismiss="modal">Valider</button>
         </div>
         </div>
     </div>
