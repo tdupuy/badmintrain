@@ -47,6 +47,19 @@ class Tournament
         return $players;
     }
 
+    private function generate_players_arr_from_teams($teams){
+        $players = [];
+        foreach($teams as $team){
+            $players_in_team = explode('-',$team);
+            foreach($players_in_team as $player){
+                if(array_search($player,$players) === false){
+                    $players[$player] = $player;
+                }
+            }
+        }
+        return $players;
+    }
+
 
     /**
      * Créer les matches pour le nombre de joueur indiqué
@@ -65,7 +78,7 @@ class Tournament
     private function delete_player_others_matches($teams,$player){
         foreach($teams as $key => $team){
             $players_in_teams = explode('-',$team);
-            if($player == $players_in_teams[0] || $players == $players_in_teams[1]){
+            if( $players_in_teams[0] == $player  || $players_in_teams[1] == $player ){
                 unset($teams[$key]);
             }
         }
@@ -99,7 +112,7 @@ class Tournament
             $teams_key = array_search($match[1],$this->teams);
             unset($this->teams[$teams_key]);
         }
-        $this->substitutes = Match::get_substitutes_players($matches,$this->generate_players_arr($this->nbplayers));
+        $this->substitutes = Match::get_substitutes_players($matches,$this->generate_players_arr_from_teams($this->teams));
         $tournament['tour_'.$index_turn] = $matches;
         $tournament['tour_'.$index_turn]['substitutes'] = $this->substitutes;
         $tournament['tour_'.$index_turn]['teams'] = $this->teams;
