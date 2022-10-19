@@ -47,19 +47,6 @@ class Tournament
         return $players;
     }
 
-    private function generate_players_arr_from_teams($teams){
-        $players = [];
-        foreach($teams as $team){
-            $players_in_team = explode('-',$team);
-            foreach($players_in_team as $player){
-                if(array_search($player,$players) === false){
-                    $players[$player] = $player;
-                }
-            }
-        }
-        return $players;
-    }
-
 
     /**
      * Créer les matches pour le nombre de joueur indiqué
@@ -91,6 +78,21 @@ class Tournament
             // On retire un car on ajouté les substitutes dans le tableau
             $this->nbterrains = sizeof($old_tournament) - 1;
             $this->nbplayers = ($this->nbterrains * 4) + sizeof($old_tournament['substitutes']);
+            $this->substitutes = $old_tournament['substitutes'];
+            foreach($old_tournament as $terrain){
+                foreach($terrain as $team){
+                    if(strpos($team,'-') != false){
+                        $players_in_team = explode('-',$team);
+                        foreach($players_in_team as $player){
+                            $players[$player] = $player;
+                        }
+                    }else{
+                        $players[$team] = $team;
+                    }
+                }
+            }
+        }else{
+            $players = $this->generate_players_arr($this->nbplayers);
         }
         if($teams && !empty($teams) && sizeof($teams) > 1){
             $this->teams = $teams;
@@ -112,7 +114,7 @@ class Tournament
             $teams_key = array_search($match[1],$this->teams);
             unset($this->teams[$teams_key]);
         }
-        $this->substitutes = Match::get_substitutes_players($matches,$this->generate_players_arr_from_teams($this->teams));
+        $this->substitutes = Match::get_substitutes_players($matches,$players);
         $tournament['tour_'.$index_turn] = $matches;
         $tournament['tour_'.$index_turn]['substitutes'] = $this->substitutes;
         $tournament['tour_'.$index_turn]['teams'] = $this->teams;
