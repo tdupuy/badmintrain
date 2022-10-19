@@ -74,7 +74,7 @@ class Team
     public function get_team_to_play($teams,$substitutes = []){
         // On cherche à créer un match avec ceux qui ont pas joués
         if(!empty($substitutes)){
-            $teams_to_play = $this->test($substitutes);
+            $teams_to_play = $this->generate_teams_on_purpose($substitutes);
             foreach($teams_to_play as $team_to_play){ 
                 if(Match::is_match_played($teams,$team_to_play) == false){
                     return $team_to_play;
@@ -95,7 +95,7 @@ class Team
         foreach($joueurs as $joueur){
             $joueurs_arr[] = explode('joueur_',$joueur)[1];
         }
-        $teams_to_play = $this->test($joueurs_arr);
+        $teams_to_play = $this->generate_teams_on_purpose($joueurs_arr);
         if($teams_to_play && sizeof($teams_to_play) > 0){
             foreach($teams_to_play as $team_to_play){
                 if(Match::is_match_played($teams,$team_to_play) == false){
@@ -104,13 +104,13 @@ class Team
             }
         }
         // Sinon on en a plus raf et on prend la première team du tableau
-        if($teams && !empty($teams)){
+        if($teams){
             return array_shift(array_values($teams));
         }
         return false;
     }
 
-    public function test($teams){
+    public function generate_teams_on_purpose($teams){
         $n = sizeof($teams);
         $array = $teams;
         $r_temp = $array;

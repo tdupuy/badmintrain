@@ -61,18 +61,51 @@
     top: 3rem;
 }
 
-.back-home{
+.action-menu a{
     position: fixed;
     right: .66rem;
     font-size: 1rem!important;
     background-color: #3a8eba!important;
     border-radius: 5px 0 0 5px!important;
     color: white!important;
-    bottom: 1rem;
+}
+
+.action-menu a.back-home{
+    bottom:1rem;
+}
+
+.action-menu a.add-player{
+    bottom: 3rem;
+    width: 2.5rem;
 }
 
 .substitute{
     font-weight: bold;
     color: #3a8eba;
     font-size: 1.2rem;
+}
+
+.controls .control{
+    position: absolute;
+    top: 0;
+    font-weight: bold;
+    height: 20rem;
+    font-size: 1.5rem;
+    width: 2rem;
+}
+
+.controls .control:hover{
+    cursor: pointer;
+}
+
+.controls .control i{
+    padding-top: 9rem;
+}
+
+.controls .control-prev{
+    left: -2.5rem;
+}
+
+.controls .control-next{
+    right: -2.5rem;
 }
