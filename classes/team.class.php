@@ -95,10 +95,11 @@ class Team
         foreach($joueurs as $joueur){
             $joueurs_arr[] = explode('joueur_',$joueur)[1];
         }
+    
         $teams_to_play = $this->generate_teams_on_purpose($joueurs_arr);
         if($teams_to_play && sizeof($teams_to_play) > 0){
             foreach($teams_to_play as $team_to_play){
-                if(Match::is_match_played($teams,$team_to_play) == false){
+                if(Match::is_match_played($teams,$team_to_play) === false){
                     return $team_to_play;
                 }
             }
