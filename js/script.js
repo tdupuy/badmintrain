@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-    $('.terrain_1').siblings('.terrain').addClass('d-none');
+    /*$('.terrain_1').siblings('.terrain').addClass('d-none');
     $('.controls .control').click(function(){
         let direction = '';
         if($(this).hasClass('control-prev')){
@@ -28,7 +28,7 @@ $( document ).ready(function() {
                 $('.terrain_' + index ).removeClass('d-none');
             }
         });
-    });
+    });*/
     $('#del-player-confirm').click(function(){
         let player = $('#del-player-id').val();
         let hrefnextturn = $('#next-turn').attr('href');
