@@ -107,8 +107,8 @@ $url = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] . explode('?', $
                             <?php if(strpos($key2,'terrain_') !== false) : ?>
                                 <div class="card mx-3 mb-5 <?php echo $key2; ?> terrain" style="width: 18rem;display:inline-block;height:20rem;">
                                     <div class="controls">
-                                        <div class="control control-prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></div>
-                                        <div class="control control-next"><i class="fa fa-chevron-right" aria-hidden="true"></i></div>
+                                        <!--<div class="control control-prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></div>
+                                        <div class="control control-next"><i class="fa fa-chevron-right" aria-hidden="true"></i></div>-->
                                     </div>
                                     <div class="card-header text-uppercase">
                                         <b><?php echo str_replace('_',' ',$key2); ?></b>
